@@ -1,8 +1,7 @@
 pipeline {
     agent any
     environment {
-        //be sure to replace "willbla" with your own Docker Hub username
-        DOCKER_IMAGE_NAME = "sarab303/train-schedule"
+        DOCKER_IMAGE_NAME = "sarab303/my-app"
         CANARY_REPLICAS = 0
     }
     stages {
@@ -10,7 +9,7 @@ pipeline {
             steps {
                 echo 'Running build automation'
                 sh './gradlew build --no-daemon'
-                archiveArtifacts artifacts: 'dist/trainSchedule.zip'
+                archiveArtifacts artifacts: 'dist/my-app.zip'
             }
         }
         stage('Build Docker Image') {
@@ -32,7 +31,7 @@ pipeline {
             }
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker access key') {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
                     }
